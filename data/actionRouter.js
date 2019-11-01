@@ -24,21 +24,21 @@ router.get('/', (req, res) => {
    })
 
    //POST actions 
-   router.post('/', (req, res) => {
+   router.post('/:id', (req, res) => {
     const {notes, description} = req.body
     if(!notes || !description) {
     res.status(400).json({error: "Please provide a name and description"})
     }
 
-    Actions.insert({notes, description})
-    .then(post => {
-    res.status(200).json(post)
-    })
-    // const newObj = {...req.body, project_id: req.params.id}
-    // Actions.insert(newObj)
-    // .then(addAction => {
-    //  res.status(200).json(addAction)
+    // Actions.insert(req.body)
+    // .then(post => {
+    // res.status(200).json(post)
     // })
+    const newObj = {...req.body, project_id: req.params.id}
+    Actions.insert(newObj)
+    .then(addAction => {
+     res.status(200).json(addAction)
+    })
     .catch(err => {
     res.status(500).json({error: "There was an error adding the action"})
     })

@@ -43,8 +43,8 @@ const {name, description} = req.body
 if(!name || !description) {
 res.status(400).json({error: "Please provide a name and description"})
 }
-const newPost = {...req.body, project_id: req.params.id}
-Projects.insert(newPost)
+
+Projects.insert(req.body)
 .then(addProject => {
  res.status(200).json(addProject)
 })
