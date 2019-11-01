@@ -1,3 +1,21 @@
+require('dotenv').config()
+console.log('this is working');
+const express = require('express');
+const server = express();
+server.use(express.json());
+
+const userRouter = require('./data/userRouter.js')
+server.use('/api/users', userRouter )
+
+server.get('/', (req, res) => {
+    res.status(200).json({message: 'My API'})
+  });
+
+  const port = process.env.PORT || 8080
+  server.listen(port, () => console.log(`listening on port ${port}`))
+
+  module.exports = server
+
 /*
 play this: https://www.youtube.com/watch?v=d-diB65scQU
 
