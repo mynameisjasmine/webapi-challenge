@@ -1,6 +1,6 @@
 const express = require('express');
-const Actions = require('../data/helpers/actionModel.js');
 const Projects = require('../data/helpers/projectModel.js')
+const Actions = require('../data/helpers/actionModel.js');
 const helmet = require('helmet'); 
 const morgan = require('morgan')
 
@@ -15,9 +15,13 @@ server.use(morgan('dev'));
 //GET projects
 router.get('/', (req, res) => {
  Projects.get() 
- .then(action => {
- res.status(200).json(action)
- })  
+ .then(projects => {
+ res.status(200).json(projects)
+ })
+ .catch(err => {
+ console.log(err);
+ res.status(500).json({error: "The projects could not be retrieved."})
+    })  
 })
 
 //GET by project id
@@ -64,8 +68,28 @@ res.status(404).json({message: "The post with the specified ID does not exist."}
 res.status(500).json({ error: "The post could not be removed"})
   })
 })
-//Action CRUD operations
 
+
+//PUT project
+ router.put('/:id', (req, res) => {
+const {name, description} = req.body
+if(!name && !description) {
+res.status(400).json({error: "Please provide a name and description"})
+ }
+const id = req.params.id
+ Projects.update(id, {name, description})
+ .then(updated => {
+ if(updated) {
+res.status(200).json(updated)
+ } else {
+res.status(404).json({message: "The post with the specified id does not exist." })
+  }
+})
+.catch(err => {
+console.log(err);
+res.status(500).json({error: "The post information could not be modified." })
+  })
+ });
 
 
 module.exports = router
